@@ -122,9 +122,9 @@ def reset_env(env, min_angle=np.pi/10, max_angle=np.pi/6):
 
 def create_double_pendulum_data(args, side=32):
     env_name = 'Acrobot-v1'
-    env = gym.make(env_name).unwrapped
+    env = gym.make(env_name, render_mode='rgb_array').unwrapped
     env.dt = args.delta_t
-    env.seed(args.seed)
+    env.reset(seed=args.seed)
     data = np.zeros((args.data_size, args.seq_len, side, side))
     latent_data = np.zeros((args.data_size, args.seq_len, 4))
     params_data = []
@@ -134,7 +134,7 @@ def create_double_pendulum_data(args, side=32):
         params = get_params()
 
         for step in range(args.seq_len):
-            processed_frame = preproc(env.render('rgb_array'), side)
+            processed_frame = preproc(env.render(), side)
 
             data[trial, step] = processed_frame
             obs = step_env(args, env, params)

@@ -55,7 +55,7 @@ def get_unlearned_params():
 def reset_env(env, args, min_angle=0., max_angle=np.pi / 6):
     angle_ok = False
     while not angle_ok:
-        obs, info = env.reset()
+        obs, info = env.reset(args.seed)
         theta_init = np.abs(get_theta(obs))
         if min_angle < theta_init < max_angle:
             angle_ok = True
