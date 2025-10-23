@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium as gym
 import skimage.transform
 from tqdm import trange
 
@@ -62,7 +62,7 @@ def reset_env(env, min_angle=0., max_angle=np.pi / 6):
 
 
 def create_pendulum_data(args, side=28):
-    env_name = 'Pendulum-v0'
+    env_name = 'Pendulum-v1'
     env = gym.make(env_name).unwrapped
     env.seed(args.seed)
     data = np.zeros((args.data_size, args.seq_len, side, side))
