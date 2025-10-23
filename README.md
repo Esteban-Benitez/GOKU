@@ -5,8 +5,8 @@ This repository is an implementation of the GOKU paper: [Generative ODE Modeling
 ### Data creation
 To create the datasets used in the paper run:
 * Friction-less pendulum:  `uv run python create_data.py --model pendulum`
-* Friction pendulum: `python3 create_data.py --model pendulum --friction`
-* Double-pendulum experiment:  `python3 create_data.py --model double_pendulum`
+* Friction pendulum: `uv run python create_data.py --model pendulum --friction`
+* Double-pendulum experiment:  `uv run python create_data.py --model double_pendulum`
 * Cardiovascular system: `python3 create_data.py --model cvs`
 
 The data would be created using default arguments. To view / modify them check the file `config.py`, and `create_data.py`.
