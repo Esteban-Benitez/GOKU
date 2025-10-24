@@ -13,6 +13,7 @@ dependencies = [
     "scikit-image",
     "scipy",
     "torch",
+    "torchdiffeq>=0.2.5",
     "tqdm",
     "wheel<0.40.0",
 ]

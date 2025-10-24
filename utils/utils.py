@@ -63,7 +63,7 @@ def normal_kl(mu1, lv1, mu2, lv2):
 
 
 def create_transforms(args):
-    data_norm_params = torch.load(args.data_path + 'data_norm_params.pkl')
+    data_norm_params = torch.load(args.data_path + 'data_norm_params.pkl', weights_only=False)
     data_transforms = {}
     # Normalization transformation
     if args.norm is not None:
