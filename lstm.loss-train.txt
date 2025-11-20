@@ -1,0 +1,11 @@
+Model: LSTM - pendulum created with 486560 parameters.
+[Epoch 1/10]  loss = 0.2329
+[Epoch 2/10]  loss = 0.2277
+[Epoch 3/10]  loss = 0.2220
+[Epoch 4/10]  loss = 0.2148
+[Epoch 5/10]  loss = 0.2047
+[Epoch 6/10]  loss = 0.1888
+[Epoch 7/10]  loss = 0.1624
+[Epoch 8/10]  loss = 0.1240
+[Epoch 9/10]  loss = 0.0841
+[Epoch 10/10]  loss = 0.0609

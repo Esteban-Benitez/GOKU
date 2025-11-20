@@ -28,7 +28,7 @@ def load_data_config(args):
 
 def load_goku_train_config(args):
     if args.model == 'pendulum':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -40,7 +40,7 @@ def load_goku_train_config(args):
         args.grounding_loss = 100.0
 
     if args.model == 'double_pendulum':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -52,7 +52,7 @@ def load_goku_train_config(args):
         args.grounding_loss = 100.0
 
     if args.model == 'pendulum_friction':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -81,7 +81,7 @@ def load_goku_train_config(args):
 
 def load_latent_ode_train_config(args):
     if args.model == 'pendulum':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -92,7 +92,7 @@ def load_latent_ode_train_config(args):
         args.kl_end_af = 0.00001
 
     if args.model == 'double_pendulum':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -103,7 +103,7 @@ def load_latent_ode_train_config(args):
         args.kl_end_af = 0.00001
 
     if args.model == 'pendulum_friction':
-        args.num_epochs = 1600
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.delta_t = 0.05
@@ -130,7 +130,7 @@ def load_latent_ode_train_config(args):
 
 def load_lstm_train_config(args):
     if args.model == 'pendulum':
-        args.num_epochs = 1000
+        args.num_epochs = 10
         args.mini_batch_size = 64
         args.seq_len = 50
         args.data_path = 'data/pendulum/'
