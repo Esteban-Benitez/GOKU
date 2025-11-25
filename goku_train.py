@@ -103,8 +103,11 @@ def train(args):
     # Save model and run hyper parameters
     log_dict = {"args": args,
                 "model": best_model.state_dict(),
-                "data_args": torch.load(args.data_path + 'data_args.pkl')
-                }
+                "data_args": torch.load(args.data_path + 'data_args.pkl'),
+                "opt": optimizer.state_dict(),          # add optimizer state
+                "epoch": epoch,                         # optional: last epoch
+                "best_val_loss": float(best_val_loss)   # optional bookkeeping
+               }
     torch.save(log_dict, args.checkpoints_dir + 'goku_model.pkl')
 
 
