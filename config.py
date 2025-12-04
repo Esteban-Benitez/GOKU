@@ -64,7 +64,7 @@ def load_goku_train_config(args):
         args.grounding_loss = 1000.0
 
     if args.model == 'cvs':
-        args.num_epochs = 400
+        args.num_epochs = 10
         args.mini_batch_size = 128
         args.seq_len = 200
         args.delta_t = 1.0
