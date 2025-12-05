@@ -26,7 +26,7 @@ To train baselines:
   * CVS: `python3 di_baseline_cvs.py`
 
 ```zsh
-uv run python goku_train.py --mopdel pendulum
+uv run python goku_train.py --model pendulum
 uv run python latent_ode_train.py --model pendulum
 ```
   
