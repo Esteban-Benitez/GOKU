@@ -42,3 +42,5 @@ echo "All done"
 # Reattach: tmux attach -t goku_run
 
 # tmux new -d -s goku_run 'bash /goku/home/ec2-user/GOKU/batch_run.sh'
+#eval "$(ssh-agent -s)"
+#eval "$(ssh-agent -s)"
