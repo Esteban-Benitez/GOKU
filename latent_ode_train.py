@@ -96,6 +96,7 @@ def train(args):
 
     log_dict = {"args": args,
                 "model": best_model.state_dict(),
+                "opt": optimizer.state_dict(),
                 "data_args": torch.load(args.data_path + 'data_args.pkl')
                 }
 
