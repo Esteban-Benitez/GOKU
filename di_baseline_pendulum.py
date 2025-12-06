@@ -127,6 +127,14 @@ def train_params(args, data, train):
 
     t = torch.arange(0.0, end=data["latent_mask"].shape[1] * delta_t, step=delta_t)
     predicted_z = model(data["latent_batch"], t)
+    log_dict = {
+        "args": args,
+        "model": model.state_dict(),
+        "opt": optimizer.state_dict(),
+        "data_args": torch.load(args.data_path + 'data_args.pkl')
+    }
+    print("args.checkpoints_dir:", args.checkpoints_dir)
+    torch.save(log_dict, args.checkpoints_dir + 'di_baseline_pendulum.pkl')
 
     return model.params.detach(), predicted_z.detach()
 
