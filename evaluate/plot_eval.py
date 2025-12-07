@@ -1,61 +1,90 @@
 import re
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-def parse_file(path):
-    results = {}  # {system: {method: mine_val}}
-    system = None
-    with open(path, "r") as f:
-        for line in f:
-            sys_match = re.match(r'-+([A-Z_]+)-+', line)
-            if sys_match:
-                system = sys_match.group(1)
-            row_match = re.match(r'(GOKU|Latent-ODE|LSTM)\s*\|\s*([\d\.]+) \(mine\)', line)
-            if row_match and system:
-                method = row_match.group(1)
-                mine_val = float(row_match.group(2))
-                if system not in results:
-                    results[system] = {}
-                results[system][method] = mine_val
-    return results
+import re
 
-def custom_bar_and_trend(data_dicts, labels, methods=["GOKU", "Latent-ODE", "LSTM"]):
-    systems = ["DOUBLE_PENDULUM", "PENDULUM", "CVS"]
-    system_titles = {'CVS': 'CVS', 'PENDULUM': 'Pendulum', 'DOUBLE_PENDULUM': 'Double Pendulum'}
-    colors = ['dodgerblue', 'orangered']  # AdamW, Adam
-    x = np.arange(len(methods))
+def parse_file(filename):
+    data = {}
+    current_block = None
+    with open(filename, "r") as f:
+        lines = f.readlines()
+    for line in lines:
+        # Block detection (more robust, matches even if extra dashes or whitespace)
+        m_block = re.search(r'-+([A-Z_]+)-+', line)
+        if m_block:
+            block_name = m_block.group(1)
+            current_block = block_name
+            if current_block not in data:
+                data[current_block] = {}
+            continue
+
+        # Match: [GOKU|Latent-ODE|LSTM] | float (mine)
+        m_entry = re.match(r"\s*(GOKU|Latent-ODE|LSTM)\s*\|\s*([\d\.]+)\s*\(mine\)", line)
+        if current_block and m_entry:
+            model = m_entry.group(1)
+            value = float(m_entry.group(2))
+            data[current_block][model] = value
+
+    return data
+    
+def plot_grouped_bar(ax, methods, adam_vals, adamw_vals, title, show_ylabel=False):
+    x = range(len(methods))
     width = 0.35
+    ax.bar([i - width/2 for i in x], adam_vals, width, label='Adam')
+    ax.bar([i + width/2 for i in x], adamw_vals, width, label='AdamW')
+    ax.set_xticks(list(x))
+    ax.set_xticklabels(methods, rotation=45)
+    ax.set_title(title)
+    if show_ylabel:
+        ax.set_ylabel('Extrap. L1 (x1e3) [pixels]')
+    ax.legend()
+    ax.grid(axis='y')
 
-    fig = plt.figure(figsize=(12, 9))
-    gs = gridspec.GridSpec(2, 2, height_ratios=[1, 1.1])
-    # Top row: Double Pendulum [0,0], Pendulum [0,1]
-    ax0 = fig.add_subplot(gs[0, 0])
-    ax1 = fig.add_subplot(gs[0, 1])
+def main():
+    adam_data = parse_file("evaluate/adam_output.txt")
+    adamw_data = parse_file("evaluate/adamw_output.txt")
+
+    methods = ["GOKU", "Latent-ODE", "LSTM"]
+    block_titles = {
+        "PENDULUM": "Pendulum",
+        "DOUBLE_PENDULUM": "Double Pendulum",
+        "CVS": "CVS"
+    }
+
+    # Layout: 2 cols x 2 rows, but bottom CVS plot spans both columns
+    fig = plt.figure(figsize=(11, 8))
+    gs = gridspec.GridSpec(2, 2, height_ratios=[1,1.2])
+
+    # Top row
+    ax_pendulum = fig.add_subplot(gs[0, 0])
+    ax_double = fig.add_subplot(gs[0, 1])
+    plot_grouped_bar(
+        ax_pendulum, methods, 
+        [adam_data["PENDULUM"].get(m, None) for m in methods],
+        [adamw_data["PENDULUM"].get(m, None) for m in methods],
+        block_titles["PENDULUM"], 
+        show_ylabel=True
+    )
+    plot_grouped_bar(
+        ax_double, methods, 
+        [adam_data["DOUBLE_PENDULUM"].get(m, None) for m in methods],
+        [adamw_data["DOUBLE_PENDULUM"].get(m, None) for m in methods],
+        block_titles["DOUBLE_PENDULUM"]
+    )
+
     # Bottom row: CVS spans both columns
-    ax2 = fig.add_subplot(gs[1, :])
+    ax_cvs = fig.add_subplot(gs[1, :])
+    plot_grouped_bar(
+        ax_cvs, methods, 
+        [adam_data["CVS"].get(m, None) for m in methods],
+        [adamw_data["CVS"].get(m, None) for m in methods],
+        block_titles["CVS"],
+        show_ylabel=True
+    )
 
-    axes = [ax0, ax1, ax2]
-    for idx, (system, ax) in enumerate(zip(systems, axes)):
-        for i, data in enumerate(data_dicts):
-            vals = [data.get(system, {}).get(m, np.nan) for m in methods]
-            pos = x - width/2 + i*width
-            bars = ax.bar(pos, vals, width, align='center', color=colors[i], alpha=0.6, label=labels[i])
-            ax.plot(x, vals, marker='o', color=colors[i], linewidth=2, alpha=0.9)
-        ax.set_xticks(x)
-        ax.set_xticklabels(methods)
-        ax.set_title(system_titles[system])
-        ax.set_ylabel('L1 Error (x1e3)')
-        ax.set_ylim(bottom=0)
-        ax.grid(True, linestyle=":", alpha=0.7)
-        if idx == 0:
-            # Only show legend once, for clarity
-            ax.legend()
-    plt.suptitle("Extrapolation L1 Error (mine): AdamW vs Adam\nDouble Pendulum & Pendulum (Top), CVS (Bottom)", fontsize=15)
-    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.tight_layout()
     plt.show()
 
 if __name__ == "__main__":
-    adamw_results = parse_file("evaluate/adamw_output.txt")
-    adam_results = parse_file("evaluate/adam_output.txt")
-    custom_bar_and_trend([adamw_results, adam_results], labels=["AdamW", "Adam"])
+    main()
