@@ -16,7 +16,11 @@ class GOKU(nn.Module):
         latent_z_0_loc, latent_z_0_log_var, latent_params_loc, latent_params_log_var = self.encoder(mini_batch)
 
         if variational:
-            latent_z_0 = torch.distributions.normal.Normal(latent_z_0_loc, torch.exp(latent_z_0_log_var / 2.0)).rsample()
+            eps = 1e-8
+            # clamp log-var to avoid underflow
+            clamped_logvar = torch.clamp(latent_z_0_log_var, min=-30.0)
+            std = torch.exp(0.5 * clamped_logvar).clamp_min(eps)
+            latent_z_0 = torch.distributions.Normal(latent_z_0_loc, std).rsample()
             latent_params = torch.distributions.normal.Normal(latent_params_loc, torch.exp(latent_params_log_var / 2.0)).rsample()
 
         else:

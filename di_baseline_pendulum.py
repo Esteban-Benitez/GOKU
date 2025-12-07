@@ -79,8 +79,8 @@ def set_seed(seed, fully_deterministic=True):
 def fetch_data(train):
     # Fetch data:
     train_path = 'train' if train else 'test'
-    raw_data = torch.load(args.data_path + 'processed_data.pkl')
-    grounding_data = torch.load(args.data_path + 'grounding_data.pkl')
+    raw_data = torch.load(args.data_path + 'processed_data.pkl', weights_only=False)
+    grounding_data = torch.load(args.data_path + 'grounding_data.pkl', weights_only=False)
     processed_data = {}
 
     processed_data["latent_mask"] = torch.FloatTensor(grounding_data[train_path + "_latent_mask"])
@@ -88,8 +88,8 @@ def fetch_data(train):
     processed_data["data_batch"] = torch.FloatTensor(raw_data[train_path])
 
     # gt data:
-    processed_data["gt_latent_data"] = torch.load(args.data_path + train_path + '_latent_data.pkl')
-    gt_params_data_dict = torch.load(args.data_path + train_path + '_params_data.pkl')
+    processed_data["gt_latent_data"] = torch.load(args.data_path + train_path + '_latent_data.pkl', weights_only=False)
+    gt_params_data_dict = torch.load(args.data_path + train_path + '_params_data.pkl', weights_only=False)
 
     processed_data["gt_params_data"] = np.array([val for key, val in gt_params_data_dict.items()]).transpose()
     return processed_data
@@ -127,6 +127,14 @@ def train_params(args, data, train):
 
     t = torch.arange(0.0, end=data["latent_mask"].shape[1] * delta_t, step=delta_t)
     predicted_z = model(data["latent_batch"], t)
+    log_dict = {
+        "args": args,
+        "model": model.state_dict(),
+        "opt": optimizer.state_dict(),
+        "data_args": torch.load(args.data_path + 'data_args.pkl')
+    }
+    print("args.checkpoints_dir:", args.checkpoints_dir)
+    torch.save(log_dict, args.checkpoints_dir + 'di_baseline_pendulum.pkl')
 
     return model.params.detach(), predicted_z.detach()
 
@@ -157,7 +165,7 @@ def train_generative(args, train, test, z_train, z_test):
 if __name__ == '__main__':
     # Architecture names
     parser = argparse.ArgumentParser(description="parse args")
-    parser.add_argument('-n', '--num-epochs', type=int, default=200)
+    parser.add_argument('-n', '--num-epochs', type=int, default=10)
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--data-path', type=str, default='data/pendulum/')
     parser.add_argument('--checkpoints-dir', type=str, default='checkpoints/pixel_pendulum/di/')

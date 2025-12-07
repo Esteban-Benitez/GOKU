@@ -96,8 +96,8 @@ def set_seed(seed, fully_deterministic=True):
 def fetch_data(train):
     # Fetch data:
     train_path = 'train' if train else 'test'
-    raw_data = torch.load(args.data_path + 'processed_data.pkl')
-    grounding_data = torch.load(args.data_path + 'grounding_data.pkl')
+    raw_data = torch.load(args.data_path + 'processed_data.pkl', weights_only=False)
+    grounding_data = torch.load(args.data_path + 'grounding_data.pkl', weights_only=False)
     processed_data = {}
 
     processed_data["latent_mask"] = torch.FloatTensor(grounding_data[train_path + "_latent_mask"])
@@ -105,8 +105,8 @@ def fetch_data(train):
     processed_data["data_batch"] = torch.FloatTensor(raw_data[train_path])
 
     # gt data:
-    processed_data["gt_latent_data"] = torch.load(args.data_path + train_path + '_latent_data.pkl')
-    gt_params_data_dict = torch.load(args.data_path + train_path + '_params_data.pkl')
+    processed_data["gt_latent_data"] = torch.load(args.data_path + train_path + '_latent_data.pkl', weights_only=False)
+    gt_params_data_dict = torch.load(args.data_path + train_path + '_params_data.pkl', weights_only=False)
 
     processed_data["gt_params_data"] = np.array([val for key, val in gt_params_data_dict.items()]).transpose()
     return processed_data
@@ -187,6 +187,7 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--num-epochs', type=int, default=300)
     parser.add_argument('--seed', type=int, default=13)
     parser.add_argument('--data-path', type=str, default='data/double_pendulum/')
+    parser.add_argument('--checkpoints-dir', type=str, default='checkpoints/pixel_double_pendulum/di/')
     args = parser.parse_args()
 
     set_seed(args.seed)
@@ -194,16 +195,16 @@ if __name__ == '__main__':
     test_data = fetch_data(train=False)
 
     params_batch_train, predicted_z_train = train_params(args, train_data, train=True)
-    torch.save(params_batch_train, 'baseline_params_train.pkl')
-    torch.save(predicted_z_train, 'baseline_z_train.pkl')
+    torch.save(params_batch_train, args.checkpoints_dir + 'baseline_params_train.pkl')
+    torch.save(predicted_z_train, args.checkpoints_dir + 'baseline_z_train.pkl')
     # params_batch_train = torch.load('baseline_params_train.pkl')
     # predicted_z_train = torch.load('baseline_z_train.pkl')
 
     params_batch_test, predicted_z_test = train_params(args, test_data, train=False)
-    torch.save(params_batch_test, 'baseline_params_test.pkl')
-    torch.save(predicted_z_test, 'baseline_z_test.pkl')
+    torch.save(params_batch_test, args.checkpoints_dir + 'baseline_params_test.pkl')
+    torch.save(predicted_z_test, args.checkpoints_dir + 'baseline_z_test.pkl')
     # params_batch_test = torch.load('baseline_params_test.pkl')
     # predicted_z_test = torch.load('baseline_z_test.pkl')
 
     predicted_x_test = train_generative(args, train_data, test_data, predicted_z_train, predicted_z_test)
-    torch.save(predicted_x_test, 'baseline_x_test.pkl')
+    torch.save(predicted_x_test, args.checkpoints_dir + 'baseline_x_test.pkl')

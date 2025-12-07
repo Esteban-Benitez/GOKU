@@ -1,0 +1,11 @@
+Model: Latent ODE - pendulum created with 537312 parameters.
+[Epoch 1/10]  loss = 138.8663
+[Epoch 2/10]  loss = 49.3426
+[Epoch 3/10]  loss = 42.0712
+[Epoch 4/10]  loss = 39.6607
+[Epoch 5/10]  loss = 38.1033
+[Epoch 6/10]  loss = 37.2625
+[Epoch 7/10]  loss = 36.6566
+[Epoch 8/10]  loss = 36.2424
+[Epoch 9/10]  loss = 35.6159
+[Epoch 10/10]  loss = 35.3026

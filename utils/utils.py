@@ -9,10 +9,9 @@ def reverse_sequences_torch(mini_batch):
     reversed_mini_batch = mini_batch.new_zeros(mini_batch.size())
     T = mini_batch.size(1)
     for b in range(mini_batch.size(0)):
-        time_slice = np.arange(T - 1, -1, -1)
-        time_slice = \
-            torch.cuda.LongTensor(time_slice) if 'cuda' in mini_batch.data.type() \
-            else torch.LongTensor(time_slice)
+        # Use torch.arange with explicit device/dtype instead of torch.cuda.LongTensor
+        # to avoid deprecated constructors and be robust on CPU/GPU.
+        time_slice = torch.arange(T - 1, -1, -1, device=mini_batch.device, dtype=torch.long)
         reversed_sequence = torch.index_select(mini_batch[b, :, :], 0, time_slice)
         reversed_mini_batch[b, 0:T, :] = reversed_sequence
     return reversed_mini_batch
@@ -63,7 +62,7 @@ def normal_kl(mu1, lv1, mu2, lv2):
 
 
 def create_transforms(args):
-    data_norm_params = torch.load(args.data_path + 'data_norm_params.pkl')
+    data_norm_params = torch.load(args.data_path + 'data_norm_params.pkl', weights_only=False)
     data_transforms = {}
     # Normalization transformation
     if args.norm is not None:
