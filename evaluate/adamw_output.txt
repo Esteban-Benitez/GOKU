@@ -1,0 +1,99 @@
+----------------------------CVS-------------------------------
+
+=== CVS Extrapolation Evaluation (timesteps 50-99) ===
+
+Evaluating GOKU Model:
+GOKU Extrapolation L1 error (pixels): 0.0542675256729126
+
+Evaluating Latent ODE Model:
+Latent ODE Extrapolation L1 error (pixels): 0.11174671351909637
+
+Evaluating LSTM Model (with autoregressive rollout):
+LSTM Extrapolation L1 error (pixels): 0.27899160981178284
+
+CVS Evaluation complete.
+
+=============================================
+Method           |  X extrap. L1 (x1e3) |
+---------------------------------------------
+GOKU             |    54.27 (mine)   29.00 (paper) |
+Latent-ODE       |   111.75 (mine)    2.80 (paper) |
+LSTM             |   278.99 (mine)   90.00 (paper) |
+DMM              |       85 (paper)          |
+DI 1%            |       NA (paper)          |
+DI 5%            |       11 (paper)          |
+=============================================
+
+=== CVS Extrapolation Evaluation (timesteps 50-99) ===
+
+Evaluating GOKU Model:
+GOKU Extrapolation L1 error (pixels): 0.054085467010736465
+
+Evaluating Latent ODE Model:
+Latent ODE Extrapolation L1 error (pixels): 0.11196386069059372
+
+Evaluating LSTM Model (with autoregressive rollout):
+LSTM Extrapolation L1 error (pixels): 0.27899160981178284
+
+CVS Evaluation complete.
+
+=============================================
+Method           |  X extrap. L1 (x1e3) |
+---------------------------------------------
+GOKU             |    54.09 (mine)   29.00 (paper) |
+Latent-ODE       |   111.96 (mine)    2.80 (paper) |
+LSTM             |   278.99 (mine)   90.00 (paper) |
+DMM              |       85 (paper)          |
+DI 1%            |       NA (paper)          |
+DI 5%            |       11 (paper)          |
+=============================================
+----------------------------PENDULUM-------------------------------
+
+=== Extrapolation Evaluation (timesteps 50-99) ===
+
+Evaluating GOKU Model:
+GOKU Extrapolation L1 error (pixels): 0.09058285504579544
+
+Evaluating Latent ODE Model:
+Latent ODE Extrapolation L1 error (pixels): 0.05526762455701828
+
+Evaluating LSTM Model (with autoregressive rollout):
+LSTM Extrapolation L1 error (pixels): 0.0860239639878273
+
+Evaluation complete.
+
+========================================
+Method       | X extrap. L1 (x1e3) |
+----------------------------------------
+GOKU         |    90.58 (mine)    7.00 (paper) |
+Latent-ODE   |    55.27 (mine)   42.00 (paper) |
+LSTM         |    86.02 (mine)   81.00 (paper) |
+DMM          |       74 (paper)          |
+DI 1%        |      147 (paper)          |
+DI 5%        |      147 (paper)          |
+========================================
+----------------------------DOUBLE_PENDULUM-------------------------------
+
+=== Double Pendulum Extrapolation Evaluation (timesteps 50-99) ===
+
+Evaluating GOKU Model:
+GOKU Extrapolation L1 error (pixels): 0.01698528416454792
+
+Evaluating Latent ODE Model:
+Latent ODE Extrapolation L1 error (pixels): 0.01780775375664234
+
+Evaluating LSTM Model (with autoregressive rollout):
+LSTM Extrapolation L1 error (pixels): 0.02471139281988144
+
+Double Pendulum Evaluation complete.
+
+=============================================
+Method           |  X extrap. L1 (x1e3) |
+---------------------------------------------
+GOKU             |    16.99 (mine)   12.00 (paper) |
+Latent-ODE       |    17.81 (mine)   16.00 (paper) |
+LSTM             |    24.71 (mine)   32.00 (paper) |
+DMM              |       26 (paper)          |
+DI 1%            |       37 (paper)          |
+DI 5%            |       37 (paper)          |
+=============================================
