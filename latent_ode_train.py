@@ -96,9 +96,12 @@ def train(args):
 
     log_dict = {"args": args,
                 "model": best_model.state_dict(),
+                "opt": optimizer.state_dict(),
                 "data_args": torch.load(args.data_path + 'data_args.pkl')
                 }
-    file_path = 'grounding_latent_ode_model.pkl' if args.grounding_loss else 'latent_ode_model.pkl'
+
+    # file_path = 'grounding_latent_ode_model.pkl' if args.get("grounding_loss") else 'latent_ode_model.pkl'
+    file_path = 'latent_ode_model.pkl'
     torch.save(log_dict, args.checkpoints_dir + file_path)
 
 
