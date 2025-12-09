@@ -12,7 +12,7 @@ class ODEDataSet(Dataset):
         self.ds_type = ds_type
         self.seq_len = seq_len
 
-        data_dict = torch.load(file_path)
+        data_dict = torch.load(file_path, weights_only=False)
 
         if ds_type == 'train':
             buffer = int(round(data_dict["train"].shape[0] * (1 - 0.1)))
