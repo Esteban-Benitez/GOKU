@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium as gym
 import skimage.transform
 from tqdm import trange
 
@@ -52,30 +52,30 @@ def get_unlearned_params():
     return params
 
 
-def reset_env(env, min_angle=0., max_angle=np.pi / 6):
+def reset_env(env, args, min_angle=0., max_angle=np.pi / 6):
     angle_ok = False
     while not angle_ok:
-        obs = env.reset()
+        obs, info = env.reset()
         theta_init = np.abs(get_theta(obs))
         if min_angle < theta_init < max_angle:
             angle_ok = True
 
 
 def create_pendulum_data(args, side=28):
-    env_name = 'Pendulum-v0'
-    env = gym.make(env_name).unwrapped
-    env.seed(args.seed)
+    env_name = 'Pendulum-v1'
+    env = gym.make(env_name, render_mode='rgb_array').unwrapped
+    env.reset(seed=args.seed)
     data = np.zeros((args.data_size, args.seq_len, side, side))
     latent_data = np.zeros((args.data_size, args.seq_len, 2))
     params_data = []
 
     for trial in trange(args.data_size):
-        reset_env(env)
+        reset_env(env, args)
         params = get_params()
         unlearned_params = get_unlearned_params()
 
         for step in range(args.seq_len):
-            processed_frame = preproc(env.render('rgb_array'), side)
+            processed_frame = preproc(env.render(), side)
             data[trial, step] = processed_frame
             obs = step_env(args, env, [0.], params, unlearned_params)
 
@@ -86,4 +86,3 @@ def create_pendulum_data(args, side=28):
 
     env.close()
     return data, latent_data, params_data
-
